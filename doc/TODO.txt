@@ -1,0 +1,9 @@
+- Account klasse mit Methoden für die Kontoverwaltung
+  Locks anwenden
+
+- switch-case auscoden im NameServiceRequestHandler
+  Wo sind welche Art von Locks zu setzen
+
+- Exceptions weiterleiten
+
+- Objekte auseinanderhalten / prüfen: String name ausreichend?
