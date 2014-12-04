@@ -29,7 +29,12 @@ public class Server {
 		Connection myConnection = theServer.getConnection();
 		
 		// Kommunikation
-		System.out.println(myConnection.receive());
+		try {
+			System.out.println((String)myConnection.receive());	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		myConnection.send("Who's there?");
 		
 		// Verbindung schliessen

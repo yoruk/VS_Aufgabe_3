@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,27 +13,28 @@ import util.Connection;
 
 public class NameServiceDaemon {
 	public static void main(String[] args) {
+		Map<String, ObjectRef> index = new HashMap<String, ObjectRef>();
 		ServerSocket svr_socket;
-		NameServiceIndex index = new NameServiceIndex();
-		ExecutorService thread_pool = Executors.newCachedThreadPool();
+		InetAddress localhost;
 		int port = 6666;
+		ExecutorService thread_pool = Executors.newCachedThreadPool();
 		
-		System.out.println("### NameServiceDeamon(), is running ###\n");
+		System.out.println("### NameServiceDeamon: main()");
 		
-		// Uebergebenen Port pruefen
+		// check given port
 	    if(args.length > 0) {
 	    	try {
 	    		port = Integer.parseInt(args[0]);
 	    	} catch (NumberFormatException e) {
-	    		System.out.println("Das uebergebene Argument ist keine gueltige Port-Nummer!\n"
-	            + "Verwende den Standard-Port " + port + "!\n");
+	    		System.out.println("### NameServiceDeamon: given port isn't valid! using default: \n"
+	            + port + "!\n");
 	    	}
 	    }
 
-	    // Lokale Host-Adresse des NameService-Servers ermitteln
+	    // get own host address
 	    try {
-	    	InetAddress localhost = InetAddress.getLocalHost();
-	    	System.out.println("Starte NameService...\n" + localhost.getHostAddress()
+	    	localhost = InetAddress.getLocalHost();
+	    	System.out.println("### NameServiceDeamon: starting on: " + localhost.getHostAddress()
 	                       		+ ":" + port + " (" + localhost.getHostName() + ")\n");
 		
 	    	svr_socket = new ServerSocket(port);
@@ -42,10 +44,10 @@ public class NameServiceDaemon {
 	    		thread_pool.execute(new NameServiceRequestHandler(tmp_connection, index));
 	    	}
 	    } catch (UnknownHostException e) {
-	    	System.err.println("Lokale Host-Adresse konnte nicht ermittelt werden!");
+	    	System.err.println("### NameServiceDeamon: Error, local host address hasnt been found!\n");
 	    	e.printStackTrace();
 	    } catch (IOException e) {
-	    	System.err.println("Socket auf Port " + port + " konnte nicht erstellt werden!");
+	    	System.err.println("### NameServiceDeamon: Error, couldn't open socket on port " + port + "\n");
 	    	e.printStackTrace();
 	    }
 	}
