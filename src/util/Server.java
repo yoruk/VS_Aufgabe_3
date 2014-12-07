@@ -28,6 +28,8 @@ public class Server {
 		// Auf Verbindungsanfrage warten.
 		Connection myConnection = theServer.getConnection();
 		
+		System.out.println("### Server get connection from client\n");
+		
 		// Kommunikation
 		try {
 			System.out.println((String)myConnection.receive());	
@@ -35,7 +37,7 @@ public class Server {
 			e.printStackTrace();
 		}
 		
-		myConnection.send("Who's there?");
+		myConnection.send((Object)"Who's there?");
 		
 		// Verbindung schliessen
 		myConnection.close();

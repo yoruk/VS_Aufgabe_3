@@ -2,9 +2,6 @@ package mware_lib;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import util.Connection;
 
 public class NameServiceRequestHandler implements Runnable {
@@ -18,13 +15,15 @@ public class NameServiceRequestHandler implements Runnable {
 	private final String ERROR = "error";
 	
 	public NameServiceRequestHandler(Connection connection, Map<String, ObjectRef> index) {
-		this.connection = connection;
+		System.out.println("### NameServiceRequestHandler()\n");
+	    this.connection = connection;
 		this.index = index;
 	}
 	
 	@Override
 	public void run() {
-		String method_name;
+		System.out.println("### NameServiceRequestHandler: run()\n");
+	    String method_name;
 		
 		while(true) {
 			try {
@@ -35,6 +34,7 @@ public class NameServiceRequestHandler implements Runnable {
 					case REBIND:
 						connection.send(OK);
 						tmp_objRef = (ObjectRef)connection.receive();
+						connection.send(OK);
 						index.put(tmp_objRef.getObjId(), tmp_objRef);
 						tmp_objRef = null;
 						break;
@@ -42,10 +42,10 @@ public class NameServiceRequestHandler implements Runnable {
 						
 					case RESOLVE:
 						connection.send(OK);
-						//tmp_objRef = index.get(connection.receive());
 						tmp_objId = (String)connection.receive();
 						if(tmp_objId == null) {
-							connection.send(ERROR);
+							//connection.send(ERROR);
+							connection.send(new ObjectRef(ERROR, 0, ERROR));
 						} else {
 							connection.send(index.get(tmp_objId));
 						}

@@ -1,44 +1,57 @@
 package util;
 
-//import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-//import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-//import java.io.OutputStream;
 import java.net.Socket;
 
 public class Connection {
-//	private BufferedReader in;
-//	private OutputStream out;
-	private ObjectInputStream in;
-	private ObjectOutputStream out;
-	
-//	public Connection(Socket mySock) throws IOException {
-//		in = new BufferedReader(new InputStreamReader(mySock.getInputStream()));
-//		out = mySock.getOutputStream();		
-//	}
-	public Connection(Socket mySock) throws IOException {
-		in = new ObjectInputStream(mySock.getInputStream());
-		out = new ObjectOutputStream(mySock.getOutputStream());		
-	}
-	
-//	public String receive() throws IOException {
-//		return in.readLine();
-//	}
-	public Object receive() throws IOException, ClassNotFoundException {
-			return in.readObject();
-	}
-	
-//	public void send(String message) throws IOException {
-//		out.write((message + "\n").getBytes());
-//	}
-	public void send(Object obj) throws IOException {
-		out.writeObject(obj);
-	}
-	
-	public void close() throws IOException {
-		in.close();
-		out.close();
-	}
+    private Socket socket;
+    private ObjectInputStream objectInputStream;
+
+    /**
+     * Connection constructor using a socket for communication
+     * 
+     * @param socket
+     */
+    public Connection(Socket socket) {
+        this.socket = socket;
+    }
+
+    /**
+     * Receive a message object via the connection socket
+     * 
+     * @return Message object
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public Message receive() throws IOException, ClassNotFoundException {
+        this.objectInputStream = new ObjectInputStream(new BufferedInputStream(this.socket.getInputStream()));
+        Message msg = (Message) objectInputStream.readObject();
+        System.out.println("[CONNECTION] | receive(): Received message " + msg + " from " + this.socket.getInetAddress() + ":" + this.socket.getPort());
+        return msg;
+    }
+
+    /**
+     * Send a meesage object via the connection socket
+     * 
+     * @param msg
+     * @throws IOException
+     */
+    public void send(Message msg) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeObject(msg);
+        System.out.println("[CONNECTION] | send(): Sending message " + msg + " to " + this.socket.getInetAddress() + ":" + this.socket.getPort());
+        objectOutputStream.flush();	    
+    }
+
+    /**
+     * Close the socket that was used for the connection
+     * 
+     * @throws IOException
+     */
+    public void close() throws IOException {
+        this.socket.close();
+    }
 }

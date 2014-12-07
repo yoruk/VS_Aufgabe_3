@@ -41,6 +41,7 @@ public class NameServiceDaemon {
 		
 	    	while(true) {
 	    		final Connection tmp_connection = new Connection(svr_socket.accept());
+	    		System.out.println("### NameServiceDaemon: answering incoming connection!\n");
 	    		thread_pool.execute(new NameServiceRequestHandler(tmp_connection, index));
 	    	}
 	    } catch (UnknownHostException e) {
