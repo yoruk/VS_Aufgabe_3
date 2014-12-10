@@ -3,28 +3,59 @@ package mware_lib;
 import java.io.Serializable;
 
 public class Message implements Serializable {
+	public enum MessageReason {
+		UNDEFINED, REBIND, RESOLVE, METHOD_CALL, METHOD_RETURN, EXCEPTION
+	}
+	
 	private static final long serialVersionUID = 1L;
-	private String command;
-	private Object ret_val;
+	private static int message_id_counter = 0;
+	private int message_id;
+	private MessageReason reason;
+	private String method_name;
+	private Object[] method_params;
+	private Object method_return;
 	private Object payload;
 	
 	public Message() {
+		message_id_counter++;
+		message_id = message_id_counter;
+		reason = MessageReason.UNDEFINED;
+		method_name = null;
+		method_params = null;
+		method_return = null;
+		payload = null;
 	}
-	
-	public String getCommand() {
-		return command;
+
+	public MessageReason getReason() {
+		return reason;
 	}
-	
-	public void setCommand(String command) {
-		this.command = command;
+
+	public void setReason(MessageReason reason) {
+		this.reason = reason;
 	}
-	
-	public Object getRet_val() {
-		return ret_val;
+
+	public String getMethod_name() {
+		return method_name;
 	}
-	
-	public void setRet_val(Object return_code) {
-		this.ret_val = return_code;
+
+	public void setMethod_name(String method_name) {
+		this.method_name = method_name;
+	}
+
+	public Object[] getMethod_params() {
+		return method_params;
+	}
+
+	public void setMethod_params(Object[] method_params) {
+		this.method_params = method_params;
+	}
+
+	public Object getMethod_return() {
+		return method_return;
+	}
+
+	public void setMethod_return(Object method_return) {
+		this.method_return = method_return;
 	}
 
 	public Object getPayload() {
@@ -35,32 +66,28 @@ public class Message implements Serializable {
 		this.payload = payload;
 	}
 	
+	
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Object:" + this.hashCode() + " ");
+		sb.append("Message: #" + message_id 
+				+ " reason: " + reason
+				+ " method_name: " + method_name 
+				+ " method_params: ");
 		
-		if(command == null) {
-			sb.append("Command: NULL");
+		if(method_params != null) {
+			for(int i=0; i<method_params.length; i++) {
+				sb.append(method_params[i] + " ");
+			}
 		} else {
-			sb.append("Command: " + command);
-		}
-
-		if(ret_val == null) {
-			sb.append("Return-Value: NULL");
-		} else {
-			sb.append("Return-Value: " + ret_val);
-		}
-		
-		if(payload == null) {
-			sb.append("Payload: NULL");
-		} else {
-			sb.append("Payload: " + payload);
+			sb.append("null ");
 		}
 		
-		//sb.append("\n");
-		
+		sb.append("method_return: " + method_return
+				+ " payload: " + payload);
+				
 		return sb.toString();
 	}
 }

@@ -3,7 +3,7 @@ package mware_lib;
 import java.io.Serializable;
 
 public class ObjectRef implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private String host;
 	private int port;
 	private String objId;
