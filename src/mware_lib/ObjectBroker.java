@@ -1,8 +1,10 @@
 package mware_lib;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -10,7 +12,6 @@ import java.util.concurrent.Executors;
 
 import bank_access.AccountImplBase;
 import bank_access.AccountImplSkeleton;
-import bank_access.OverdraftException;
 
 public class ObjectBroker {
 	static class ReqHandler implements Runnable {
@@ -31,6 +32,7 @@ public class ObjectBroker {
 				Object obj = null;
 				
 				try {
+					// opening connection and receiving a message
 					connection = new Connection(socket);
 					msg = connection.receive();
 					
@@ -39,30 +41,12 @@ public class ObjectBroker {
 						// for which object?
 						obj = object_cloud.get(msg.getObjName());
 						
+						// is the object in the cloud?
 						if(obj != null) {
 							
 							// object is a AccountImplBase
 							if(obj instanceof AccountImplBase) {
-								AccountImplSkeleton skeleton = new AccountImplSkeleton(connection, (AccountImplBase)obj);
-								
-								switch(msg.getMethod_name()) {
-									case "transfer":
-										Object[] params = msg.getMethod_params();
-										try {
-											skeleton.transfer((double)params[0]);
-										} catch (OverdraftException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
-										break;
-									case "getbalance":
-										skeleton.getBalance();
-										break;
-									default:
-										msg = new Message();
-										msg.setReason(Message.MessageReason.ERROR);
-										connection.send(msg);
-								}
+								new AccountImplSkeleton(connection, msg, (AccountImplBase)obj);
 							}
 							
 						
@@ -95,15 +79,13 @@ public class ObjectBroker {
 					}
 				}
 			}
-			
 		}
 /******************************* ReqHandler starts here *******************************/
-		private int port;
-		private ServerSocket serverSocket;
+		ServerSocket serverSocket;
 		private Map<String, Object> object_cloud;
 		
-		public ReqHandler(int port, Map<String, Object> object_cloud) {
-			this.port = port;
+		public ReqHandler(ServerSocket serverSocket, Map<String, Object> object_cloud) {
+			this.serverSocket = serverSocket;
 			this.object_cloud = object_cloud;
 		}
 		
@@ -111,7 +93,6 @@ public class ObjectBroker {
 		public void run() {
 			try {
 				ExecutorService thread_pool = Executors.newFixedThreadPool(10);
-				serverSocket = new ServerSocket(port);
 				Socket clientSocket = null;
 				
 				while(!Thread.interrupted()) {
@@ -132,9 +113,9 @@ public class ObjectBroker {
     private static NameService nameService;
     private static String nameServiceAddress;
     private static int nameServicePort;
-    private static ServerSocket serverSocket;
     private static String serverAddress;
-    private static final int serverPort = 6666;
+    private static int serverPort;
+    private static ServerSocket serverSocket;
     private static Thread reqHandler;
     private static boolean debugFlag;
 
@@ -145,17 +126,34 @@ public class ObjectBroker {
     	
     	nameServiceAddress = serviceHost;
     	nameServicePort = listenPort;
+    	serverPort = listenPort + 1;
     	debugFlag = debug;
     	
+    	// find an unused port for the incoming connections
+    	boolean init_port_done = false;
+    	while(init_port_done == false) {
+    		try {
+    			serverSocket =  new ServerSocket(serverPort);
+    			init_port_done = true;
+    		} catch (IOException e) {
+    	    	//System.out.println("ObjectBroker.init(): ERROR, during opening serverSocket!");
+    			//e.printStackTrace();
+    			serverPort++;
+    		}
+    	}
+    	
+    	//serverAddress = serverSocket.getLocalSocketAddress().toString();
+    	
     	try {
-			serverSocket =  new ServerSocket(serverPort);
-			serverAddress = serverSocket.getLocalSocketAddress().toString();
-		} catch (IOException e) {
-	    	System.out.println("ObjectBroker.init(): ERROR, during opening serverSocket!");
+			serverAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
-    	reqHandler = new Thread(new ObjectBroker.ReqHandler(serverPort, object_cloud));
+    	System.out.println("ObjectBroker.init(): Reqhandler @ " + serverAddress + ":" + serverPort);
+    	
+    	reqHandler = new Thread(new ObjectBroker.ReqHandler(serverSocket, object_cloud));
     	reqHandler.start();
     	
     	nameService = new NameServiceImpl(nameServiceAddress, nameServicePort, serverAddress,

@@ -5,17 +5,37 @@ import java.io.IOException;
 import mware_lib.Connection;
 import mware_lib.Message;
 
-public class AccountImplSkeleton extends AccountImplBase {
+public class AccountImplSkeleton {	
 	AccountImplBase obj;
 	Connection connection;
 	
-	public AccountImplSkeleton(Connection connection, AccountImplBase obj) {
-		this.connection = connection;
+	public AccountImplSkeleton(Connection connection, Message msg, AccountImplBase obj) {		
 		this.obj = obj;
+		this.connection = connection;
+		
+		switch(msg.getMethod_name()) {
+		case "transfer":
+			Object[] params = msg.getMethod_params();
+			transfer((double)params[0]);
+			break;
+		case "getbalance":
+			getBalance();
+			break;
+		default:
+			msg = new Message();
+			msg.setReason(Message.MessageReason.ERROR);
+			try {
+				connection.send(msg);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	@Override
-	public void transfer(double amount) throws OverdraftException {
+
+	
+	public void transfer(double amount) {
 		Message msg =  new Message();
 
 		try {
@@ -47,8 +67,7 @@ public class AccountImplSkeleton extends AccountImplBase {
 		}
 	}
 
-	@Override
-	public double getBalance() {
+	public void getBalance() {
 		Message msg = new Message();
 		msg.setReason(Message.MessageReason.METHOD_RETURN);
 		msg.setMethod_return(obj.getBalance());
@@ -59,8 +78,6 @@ public class AccountImplSkeleton extends AccountImplBase {
 			System.out.println("AccountImpleSkeleton.getBalance(): ERROR!");
 			e.printStackTrace();
 		}
-		
-		return obj.getBalance();
 	}
 
 }

@@ -9,10 +9,10 @@ public class AccountImpl extends AccountImplBase {
 	
 	@Override
 	public void transfer(double amount) throws OverdraftException {
-		account +=amount;
-		
-		if(account < 0) {
-			throw new OverdraftException("Kontostand im negativen Bereich: " + account);
+		if((account + amount) < 0) {
+			throw new OverdraftException("ERROR, not enough money in account!: " + account);
+		} else {
+			account +=amount;
 		}
 	}
 

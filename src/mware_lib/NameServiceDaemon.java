@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 public class NameServiceDaemon {
 	public static void main(String[] args) {
 		class ReqHandler implements Runnable {
+/******************************* ReqHandler starts here *******************************/
 			private Connection connection = null;
 			private Map<String, ObjectRef> object_index = new HashMap<String, ObjectRef>();
 			
@@ -69,6 +70,8 @@ public class NameServiceDaemon {
 			}
 		}
 		
+/******************************* NameServiceDaemon starts here *******************************/
+		
 		System.out.println("NameServiceDaemon.main()");
 		
 		Map<String, ObjectRef> object_index = new HashMap<String, ObjectRef>();
@@ -80,7 +83,7 @@ public class NameServiceDaemon {
 			try {
 				port = Integer.parseInt(args[0]);
 			} catch (NumberFormatException e) {
-				System.out.println("NameServiceDaemon.main(): ERROR, the given port isn't from type int!");
+				System.out.println("NameServiceDaemon.main(): ERROR, the given port isn't from type int!, using default:" + port);
 				e.printStackTrace();
 			}
 		}
