@@ -1,23 +1,20 @@
 package mware_lib;
 
-import java.io.BufferedInputStream;
-//import java.io.BufferedReader;
 import java.io.IOException;
-//import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-//import java.io.OutputStream;
 import java.net.Socket;
-//import java.util.Queue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 import mware_lib.Message;
 
 public class Connection {	
     private class IncomingHandler implements Runnable {
     	private Socket socket = null;
-    	private SynchronousQueue<Message> incoming_queue = null;
+    	private BlockingQueue<Message> incoming_queue = null;
     	
-    	public IncomingHandler(Socket socket, SynchronousQueue<Message> incoming_queue) {
+    	public IncomingHandler(Socket socket, BlockingQueue<Message> incoming_queue) {
     		this.socket = socket;
     		this.incoming_queue = incoming_queue;
     	}
@@ -26,22 +23,18 @@ public class Connection {
 		public void run() {
 			ObjectInputStream in;
 			
-			//System.out.println("run\n");
-			
 			try {
-				in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-				//in = new ObjectInputStream(socket.getInputStream());
+				//in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+				in = new ObjectInputStream(socket.getInputStream());
 				
 				while(!Thread.interrupted()) {
-					//System.out.println("test1\n");
-					//in.readObject();
+					//System.out.println((Message)in.readObject());
 					incoming_queue.add((Message)in.readObject());
-					//System.out.println("test2\n");
 				}
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -51,11 +44,11 @@ public class Connection {
 	
 	private Socket socket;
     private ObjectOutputStream out;
-    private SynchronousQueue<Message> incoming_queue = new SynchronousQueue<Message>();
+    private BlockingQueue<Message> incoming_queue = new ArrayBlockingQueue<Message>(1);
     private Thread thread_handler;
     
     public Connection(Socket socket) throws IOException {
-    	System.out.println("Connection.Connection()\n");
+    	//System.out.println("Connection.Connection()");
     	
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
@@ -68,7 +61,7 @@ public class Connection {
 		try {
 			Message tmp_msg = incoming_queue.take();
 			
-			System.out.println("Connection.receive(): Message received: " + tmp_msg + "\n");
+			//System.out.println("Connection.receive(): Message received:\n   " + tmp_msg);
 			
 			return tmp_msg;
 		} catch (InterruptedException e) {
@@ -80,8 +73,9 @@ public class Connection {
     }
 
     public void send(Message msg) throws IOException {
-    	System.out.println("Connection.send(): sending Message: " + msg + "\n");
+    	//System.out.println("Connection.send(): sending Message:\n   " + msg);
     	out.writeObject((Object)msg);
+    	out.flush();
     }
 
     public void close() throws IOException {

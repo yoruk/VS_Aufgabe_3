@@ -1,102 +1,105 @@
 package mware_lib;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Map;
 
-import util.Connection;
-
 public class NameServiceImpl extends NameService {
-    private Map<String, Object> index;
-    private Socket clientSocket;
-    private final int SERVER_PORT = 5555;
-    private final String REBIND = "rebind";
-    private final String RESOLVE = "resolve";
-    private final String OK = "ok";
-    private final String ERROR = "error";
+	private String nameServiceAddress;
+	private int nameServicePort;
+	private String serverAddress;
+	private int serverPort;
+	private boolean debug;
+	private Map<String, Object> object_cloud;
+	
+	public NameServiceImpl(String nameServiceAddress, int nameServicePort, String serverAddress,
+							int serverPort, Map<String, Object> object_cloud, boolean debug) {
+		if(debug) {
+			System.out.println("NameServiceImpl(): NameService @ " + nameServiceAddress + ":" + nameServicePort);
+		}
+		
+		this.nameServiceAddress = nameServiceAddress;
+		this.nameServicePort = nameServicePort;
+		this.serverAddress = serverAddress;
+		this.serverPort = serverPort;
+		this.object_cloud = object_cloud;
+		this.debug = debug;
+	}
+	
+	@Override
+	public void rebind(Object servant, String name) {
+		if(debug) {
+			System.out.println("NameServiceImpl.rebind(): obj: " + servant + " name: " + name);
+		}
+		
+		Socket socket = null;
+		Connection connection = null;
+		ObjectRef tmp_ObjRef = null;
+		Message tmp_msg = null;
+		
+		try {
+			socket = new Socket(nameServiceAddress, nameServicePort);
+			connection = new Connection(socket);
+			
+			tmp_ObjRef = new ObjectRef(serverAddress, serverPort, name);
+			tmp_msg = new Message();
+			tmp_msg.setReason(Message.MessageReason.REBIND);
+			tmp_msg.setPayload(tmp_ObjRef);
+			connection.send(tmp_msg);
+			
+			object_cloud.put(name, servant);			
+		} catch (IOException e) {
+			System.out.println("NameServiceImpl.rebind(): ERROR!");
+			e.printStackTrace();
+		} finally {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				System.out.println("NameServiceImpl.rebind(): ERROR!");
+				e.printStackTrace();
+			}
+		}
+	}
 
-    public NameServiceImpl(String serviceHost, int listenPort, Map<String, Object> index) throws IOException {
-        this.index = index;
-        clientSocket = new Socket(serviceHost, listenPort);
-    }
+	@Override
+	public Object resolve(String name) {
+		if(debug) {
+			System.out.println("NameServiceImpl.resolve(): objectname: " + name);
+		}
+		
+		Message tmp_msg = null;
+		Socket socket = null;
+		Connection connection = null;
+		
+		try {
+			socket = new Socket(nameServiceAddress, nameServicePort);
+			connection = new Connection(socket);
+		
+			tmp_msg = new Message();
+			tmp_msg.setPayload(name);
+			tmp_msg.setReason(Message.MessageReason.RESOLVE);
+			if(debug) System.out.println("### Sending reolve message: " + tmp_msg);
+			connection.send(tmp_msg);
 
-    @Override
-    public void rebind(Object servant, String name) {
-        Connection connection = null;
-        try {
-            // send rebind to nameserver and register object
-            connection = new Connection(clientSocket);
-            connection.send(REBIND);
-
-            // handshake with nameserver before transfering the object reference
-            if(connection.receive().equals(OK)) {
-                ObjectRef objRef = new ObjectRef(clientSocket.getLocalAddress().toString(), SERVER_PORT, name);
-                connection.send(objRef);
-                if(connection.receive().equals(OK)) {
-                    index.put(name, servant);
-                } else {
-                    connection.close();
-                }
-            } else {
-                connection.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            // connection closen
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public Object resolve(String name) {  
-        Connection connection = null;
-        try {
-            // send rebind to nameserver and register object
-            connection = new Connection(clientSocket);
-            connection.send(RESOLVE);
-
-            // handshake with nameserver before transfering the object reference
-            if(connection.receive().equals(OK)) {
-                connection.send(name);
-                ObjectRef tmp_objRef = (ObjectRef)connection.receive();
-                if(!tmp_objRef.getHost().equals(ERROR)) {
-                    connection.close();
-                    return tmp_objRef;
-                } else {
-                    connection.close();
-                    System.out.println("### NameServiceImpl: Error, resolve could not find object reference!\n");
-                    return null;
-                }                        
-            } else {
-                connection.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            // connection closen
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
+			tmp_msg = connection.receive();
+			if(debug) System.out.println("### Sending receiving message: " + tmp_msg);
+			
+		} catch (IOException e) {
+			System.out.println("NameServiceImpl.resolve(): ERROR!");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			System.out.println("NameServiceImpl.resolve(): ERROR!");
+			e.printStackTrace();
+		} finally {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				System.out.println("NameServiceImpl.resolve(): ERROR!");
+				e.printStackTrace();
+			}
+		}
+		
+		return tmp_msg.getPayload();
+	}
 
 }

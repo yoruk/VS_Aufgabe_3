@@ -4,15 +4,16 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
 	public enum MessageReason {
-		UNDEFINED, REBIND, RESOLVE, METHOD_CALL, METHOD_RETURN, EXCEPTION
+		UNDEFINED, REBIND, RESOLVE, RESOLVE_REPLY, METHOD_CALL, METHOD_RETURN, EXCEPTION, ERROR
 	}
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 10L;
 	private static int message_id_counter = 0;
 	private int message_id;
 	private MessageReason reason;
 	private String method_name;
 	private Object[] method_params;
+	private String objName;
 	private Object method_return;
 	private Object payload;
 	
@@ -49,6 +50,14 @@ public class Message implements Serializable {
 	public void setMethod_params(Object[] method_params) {
 		this.method_params = method_params;
 	}
+	
+	public String getObjName() {
+		return objName;
+	}
+
+	public void setObjName(String objName) {
+		this.objName = objName;
+	}
 
 	public Object getMethod_return() {
 		return method_return;
@@ -65,8 +74,6 @@ public class Message implements Serializable {
 	public void setPayload(Object payload) {
 		this.payload = payload;
 	}
-	
-	
 	
 	@Override
 	public String toString() {

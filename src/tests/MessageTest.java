@@ -2,9 +2,9 @@ package tests;
 
 import mware_lib.Message;
 
-public class Message_Test {
+public class MessageTest {
 	public static void main(String[] args) {
-		System.out.println("Message_Test.main()");
+		System.out.println("MessageTest.main()");
 		
 		Message msg1 = new Message();
 		System.out.println(msg1);
