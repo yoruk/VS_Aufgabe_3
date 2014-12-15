@@ -3,6 +3,7 @@ package bank_access;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
 import mware_lib.Connection;
 import mware_lib.Message;
 
@@ -45,6 +46,7 @@ public class AccountImplStub extends AccountImplBase {
 			Object[] methodParams = {amount};
 			msg.setMethod_params(methodParams);
 			msg.setObjName(objName);
+			connection.send(msg);
 			
 			// receiving method return value
 			msg = (Message)connection.receive();
@@ -74,7 +76,8 @@ public class AccountImplStub extends AccountImplBase {
 	@Override
 	public double getBalance() {
 		if(debug) {
-			System.out.println("AccountImplStub.getBalance(): objectname: " + objName);
+			System.out.println("AccountImplStub.getBalance(): serverAddress: " 
+								+ serverAddress + ":" + serverPort + " objectname: " + objName);
 		}
 		
 		Socket socket = null;
@@ -91,10 +94,11 @@ public class AccountImplStub extends AccountImplBase {
 			msg.setReason(Message.MessageReason.METHOD_CALL);
 			msg.setMethod_name("getbalance");
 			msg.setObjName(objName);
-			
+			connection.send(msg);
+					
 			// receiving method return value
 			msg = (Message)connection.receive();
-			res = (double)msg.getPayload();
+			res = (double)msg.getMethod_return();
 			
 		} catch (UnknownHostException e) {
 			if(debug) System.out.println("AccountImplStub.getBalance(): ERROR!");

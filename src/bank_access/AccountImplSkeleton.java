@@ -33,8 +33,6 @@ public class AccountImplSkeleton {
 		}
 	}
 	
-
-	
 	public void transfer(double amount) {
 		Message msg =  new Message();
 

@@ -4,7 +4,7 @@ import bank_access.AccountImpl;
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
 
-public class ServerApplicationTest {
+public class ServerTest {
 	public static void main(String[] args) {
 		System.out.println("ServerApplicationTest is running");
 		
