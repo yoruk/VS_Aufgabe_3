@@ -51,7 +51,7 @@ public class AccountImplStub extends AccountImplBase {
 			// receiving method return value
 			msg = (Message)connection.receive();
 			if((msg.getReason() == Message.MessageReason.EXCEPTION) && (msg.getPayload() instanceof OverdraftException)) {
-				throw new OverdraftException("amount in account: " + objName + " is below 0!");
+				throw (OverdraftException)msg.getPayload();
 			}
 			
 		} catch (UnknownHostException e) {

@@ -7,24 +7,24 @@ import mware_lib.ObjectBroker;
 
 public class ClientAccountTest {
 	public static void main(String[] args) {
-		System.out.println("ClientApplicationTest is running");
+		System.out.println("ClientAccountTest is running");
 		
-		System.out.println("ClientApplicationTest: creating ObjectBroker-Object");
+		System.out.println("ClientAccountTest: creating ObjectBroker-Object");
 		ObjectBroker objBroker = ObjectBroker.init("localhost", 6666, true);
 		
-		System.out.println("ClientApplicationTest: getting NameService reference");
+		System.out.println("ClientAccountTest: getting NameService reference");
 		NameService nameSvc = objBroker.getNameService();
 		
-		System.out.println("ClientApplicationTest: getting generic object reference");
+		System.out.println("ClientAccountTest: getting generic object reference");
 		Object rawObjRef = nameSvc.resolve("testkonto");
 		
-		System.out.println("ClientApplicationTest: doing the narrow cast");
+		System.out.println("ClientAccountTest: doing the narrow cast");
 		AccountImplBase konto = AccountImplBase.narrowCast(rawObjRef);
 		
-		System.out.println("ClientApplicationTest: getbalance");
+		System.out.println("ClientAccountTest: getbalance");
 		System.out.println("guthaben: " + konto.getBalance());
 		
-		System.out.println("ClientApplicationTest: transfer");
+		System.out.println("ClientAccountTest: transfer");
 		try {
 			konto.transfer(10);
 		} catch (OverdraftException e) {
@@ -32,10 +32,10 @@ public class ClientAccountTest {
 			e.printStackTrace();
 		}
 		
-		System.out.println("ClientApplicationTest: getbalance");
+		System.out.println("ClientAccountTest: getbalance");
 		System.out.println("guthaben: " + konto.getBalance());
 		
-		System.out.println("ClientApplicationTest: transfer");
+		System.out.println("ClientAccountTest: transfer");
 		try {
 			konto.transfer(-11);
 		} catch (OverdraftException e) {
@@ -43,7 +43,7 @@ public class ClientAccountTest {
 			e.printStackTrace();
 		}
 		
-		System.out.println("ClientApplicationTest: getbalance");
+		System.out.println("ClientAccountTest: getbalance");
 		System.out.println("guthaben: " + konto.getBalance());
 		
 		System.out.println("ende");
