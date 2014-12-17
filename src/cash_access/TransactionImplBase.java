@@ -1,5 +1,8 @@
 package cash_access;
 
+import mware_lib.ObjectRef;
+import bank_access.ManagerImplStub;
+
 public abstract class TransactionImplBase {
 
   public abstract void deposit(String accountID, double amount) throws InvalidParamException;
@@ -9,7 +12,8 @@ public abstract class TransactionImplBase {
   public abstract double getBalance(String accountID) throws InvalidParamException;
 
   public static TransactionImplBase narrowCast(Object rawObjectRef) {
-    return null;
+	  ObjectRef objRef = (ObjectRef)rawObjectRef;
+	  return new TransactionImplStub(objRef.getHost(), objRef.getPort(), objRef.getObjId(), true);
   }
 
 }

@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import cash_access.TransactionImplBase;
+import cash_access.TransactionImplSkeleton;
 import bank_access.AccountImplBase;
 import bank_access.AccountImplSkeleton;
 import bank_access.ManagerImplBase;
@@ -64,6 +66,11 @@ public class ObjectBroker {
 								// object is a ManagerImplBase
 								new ManagerImplSkeleton(connection, msg, (ManagerImplBase)obj, object_cloud);
 							
+							} else {
+								
+								// object is a TransactionImplBase
+								new TransactionImplSkeleton(connection, msg, (TransactionImplBase)obj, object_cloud);
+								
 							}
 											
 						// object is not in the cloud
