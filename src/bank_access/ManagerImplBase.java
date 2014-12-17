@@ -1,11 +1,14 @@
 package bank_access;
 
+import mware_lib.ObjectRef;
+
 public abstract class ManagerImplBase {
 
   public abstract String createAccount(String owner, String branch) throws InvalidParamException;
 
   public static ManagerImplBase narrowCast(Object rawObjectRef) {
-    return null;
+	  	ObjectRef objRef = (ObjectRef)rawObjectRef;
+  		return new ManagerImplStub(objRef.getHost(), objRef.getPort(), objRef.getObjId(), true);
   }
 
 }

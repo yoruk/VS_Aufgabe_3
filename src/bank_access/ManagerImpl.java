@@ -1,14 +1,14 @@
 package bank_access;
 
-import mware_lib.NameService;
-import mware_lib.ObjectBroker;
+import java.util.Map;
+
 import mware_lib.StringChecker;
 
 public class ManagerImpl extends ManagerImplBase {
-	private ObjectBroker objBroker;
+	private Map<String, Object> object_cloud;
 	
-	public ManagerImpl(ObjectBroker objBroker) {
-		this.objBroker = objBroker;
+	public void initManagerImpl(Map<String, Object> object_cloud) {
+		this.object_cloud = object_cloud;
 	}
 	
 	@Override
@@ -31,10 +31,9 @@ public class ManagerImpl extends ManagerImplBase {
 			}
 		}
 
-		NameService nameSvc = objBroker.getNameService();
-		AccountImplBase konto = new AccountImpl();
+		AccountImplBase account = new AccountImpl();
 		sb.append(owner).append("-").append(branch);
-		nameSvc.rebind(konto, sb.toString());
+		object_cloud.put(sb.toString(), account);
 		
 		return sb.toString();
 	}

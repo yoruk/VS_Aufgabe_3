@@ -6,8 +6,8 @@ import mware_lib.Connection;
 import mware_lib.Message;
 
 public class AccountImplSkeleton {	
-	AccountImplBase obj;
-	Connection connection;
+	AccountImplBase obj = null;
+	Connection connection = null;
 	
 	public AccountImplSkeleton(Connection connection, Message msg, AccountImplBase obj) {		
 		this.obj = obj;
@@ -23,8 +23,9 @@ public class AccountImplSkeleton {
 			break;
 		default:
 			msg = new Message();
-			msg.setReason(Message.MessageReason.ERROR);
+			
 			try {
+				msg.setReason(Message.MessageReason.ERROR);
 				connection.send(msg);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

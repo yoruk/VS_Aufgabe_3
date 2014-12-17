@@ -16,6 +16,7 @@ public class ServerManagerTest {
 		NameService nameSvc = objBroker.getNameService();
 		
 		System.out.println("ServerManagerTest: binding a ManagerImpl object");
-		ManagerImplBase manager = new ManagerImpl(objBroker);
+		ManagerImplBase manager = new ManagerImpl();
+		nameSvc.rebind((Object)manager, "testmanager");
 	}
 }

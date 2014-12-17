@@ -12,6 +12,8 @@ import java.util.concurrent.Executors;
 
 import bank_access.AccountImplBase;
 import bank_access.AccountImplSkeleton;
+import bank_access.ManagerImplBase;
+import bank_access.ManagerImplSkeleton;
 
 public class ObjectBroker {
 	static class ReqHandler implements Runnable {
@@ -44,18 +46,26 @@ public class ObjectBroker {
 					
 					// is it really a method call?
 					if(msg.getReason() == Message.MessageReason.METHOD_CALL) {
+						
 						// for which object?
 						obj = object_cloud.get(msg.getObjName());
 						
 						// is the object in the cloud?
 						if(obj != null) {
 							
-							// object is a AccountImplBase
+							// object is of what type ?
 							if(obj instanceof AccountImplBase) {
+								
+								// object is a AccountImplBase
 								new AccountImplSkeleton(connection, msg, (AccountImplBase)obj);
-							}
 							
+							} else if(obj instanceof ManagerImplBase) {
 						
+								// object is a ManagerImplBase
+								new ManagerImplSkeleton(connection, msg, (ManagerImplBase)obj, object_cloud);
+							
+							}
+											
 						// object is not in the cloud
 						} else {
 							msg = new Message();
