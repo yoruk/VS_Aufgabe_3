@@ -23,11 +23,13 @@ public class ObjectBroker {
 /******************************* ClientReq starts here *******************************/
 			private Socket socket;
 			private Map<String, Object> object_cloud;
+			private NameService nameService;
 			private boolean debug;
 			
-			public ClientReq(Socket socket, Map<String, Object> object_cloud, boolean debug) {
+			public ClientReq(Socket socket, Map<String, Object> object_cloud, NameService nameService, boolean debug) {
 				this.socket = socket;
 				this.object_cloud = object_cloud;
+				this.nameService = nameService;
 				this.debug = debug;
 			}
 			
@@ -64,7 +66,7 @@ public class ObjectBroker {
 							} else if(obj instanceof ManagerImplBase) {
 						
 								// object is a ManagerImplBase
-								new ManagerImplSkeleton(connection, msg, (ManagerImplBase)obj, object_cloud);
+								new ManagerImplSkeleton(connection, msg, (ManagerImplBase)obj, object_cloud, nameService);
 							
 							} else {
 								
@@ -106,11 +108,13 @@ public class ObjectBroker {
 /******************************* ReqHandler starts here *******************************/
 		private ServerSocket serverSocket;
 		private Map<String, Object> object_cloud;
+		private NameService nameService;
 		private boolean debug;
 		
-		public ReqHandler(ServerSocket serverSocket, Map<String, Object> object_cloud, boolean debug) {
+		public ReqHandler(ServerSocket serverSocket, Map<String, Object> object_cloud, NameService nameService, boolean debug) {
 			this.serverSocket = serverSocket;
 			this.object_cloud = object_cloud;
+			this.nameService = nameService;
 			this.debug = debug;
 		}
 		
@@ -126,7 +130,7 @@ public class ObjectBroker {
 				
 				while(!Thread.interrupted()) {
 					clientSocket = serverSocket.accept();
-					thread_pool.execute(new ClientReq(clientSocket, object_cloud, debug));
+					thread_pool.execute(new ClientReq(clientSocket, object_cloud, nameService, debug));
 				}
 			} catch (IOException e) {
 				System.out.println("ObjectBroker.Reqhandler.run(): ERROR!");
@@ -182,11 +186,11 @@ public class ObjectBroker {
     	
     	System.out.println("ObjectBroker.init(): Reqhandler @ " + serverAddress + ":" + serverPort);
     	
-    	reqHandler = new Thread(new ObjectBroker.ReqHandler(serverSocket, object_cloud, debugFlag));
-    	reqHandler.start();
-    	
     	nameService = new NameServiceImpl(nameServiceAddress, nameServicePort, serverAddress,
-    										serverPort, object_cloud, debugFlag);
+    			serverPort, object_cloud, debugFlag);
+
+    	reqHandler = new Thread(new ObjectBroker.ReqHandler(serverSocket, object_cloud, nameService, debugFlag));
+    	reqHandler.start();
     	
         /*
          * Das hier zurueckgelieferte Objekt soll der zentrale Einstiegspunkt

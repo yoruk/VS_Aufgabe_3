@@ -2,13 +2,16 @@ package bank_access;
 
 import java.util.Map;
 
+import mware_lib.NameService;
 import mware_lib.StringChecker;
 
 public class ManagerImpl extends ManagerImplBase {
 	private Map<String, Object> object_cloud;
+	private NameService nameService;
 	
-	public void initManagerImpl(Map<String, Object> object_cloud) {
+	public void initManagerImpl(Map<String, Object> object_cloud, NameService nameService) {
 		this.object_cloud = object_cloud;
+		this.nameService = nameService;
 	}
 	
 	@Override
@@ -34,6 +37,7 @@ public class ManagerImpl extends ManagerImplBase {
 		AccountImplBase account = new AccountImpl();
 		sb.append(owner).append("-").append(branch);
 		object_cloud.put(sb.toString(), account);
+		nameService.rebind(account, sb.toString());
 		
 		return sb.toString();
 	}
