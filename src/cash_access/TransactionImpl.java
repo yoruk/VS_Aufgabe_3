@@ -2,14 +2,17 @@ package cash_access;
 
 import java.util.Map;
 
+import cash_access.InvalidParamException;
+import cash_access.OverdraftException;
 import bank_access.AccountImplBase;
+import mware_lib.NameService;
 import mware_lib.StringChecker;
 
 public class TransactionImpl extends TransactionImplBase {
-	private Map<String, Object> object_cloud;
+	private NameService nameService;
 	
-	public void initTransactionImpl(Map<String, Object> object_cloud) {
-		this.object_cloud = object_cloud;
+	public void initTransactionImpl(NameService nameService) {
+		this.nameService = nameService;
 	}
 	
 	@Override
@@ -26,7 +29,9 @@ public class TransactionImpl extends TransactionImplBase {
 			throw new InvalidParamException("TransactionImpl.deposit(): ERROR, invalid Account identifier!");
 		} else {
 			
-			account = (AccountImplBase)object_cloud.get(accountID);
+			// get the actual account object to work on
+			Object rawObjRef = nameService.resolve(accountID);
+			account = AccountImplBase.narrowCast(rawObjRef);
 			
 			// check if there is an object that belongs to the id
 			if(account == null) {
@@ -58,7 +63,9 @@ public class TransactionImpl extends TransactionImplBase {
 			throw new InvalidParamException("TransactionImpl.withdraw(): ERROR, invalid Account identifier!");
 		} else {
 			
-			account = (AccountImplBase)object_cloud.get(accountID);
+			// get the actual account object to work on
+			Object rawObjRef = nameService.resolve(accountID);
+			account = AccountImplBase.narrowCast(rawObjRef);
 			
 			// check if there is an object that belongs to the id
 			if(account == null) {
@@ -72,7 +79,6 @@ public class TransactionImpl extends TransactionImplBase {
 					//e.printStackTrace();
 					throw new OverdraftException(e.getMessage());
 				}
-				
 			}
 		}
 	}
@@ -80,26 +86,25 @@ public class TransactionImpl extends TransactionImplBase {
 	@Override
 	public double getBalance(String accountID) throws InvalidParamException {
 		AccountImplBase account = null;
-		double ret = 0;
 		
 		// check if the string has a valid format
 		if((accountID == null) || !StringChecker.checkString(accountID)) {
 			throw new InvalidParamException("TransactionImpl.getBalance(): ERROR, invalid Account identifier!");
 		} else {
 			
-			account = (AccountImplBase)object_cloud.get(accountID);
+			// get the actual account object to work on
+			Object rawObjRef = nameService.resolve(accountID);
+			account = AccountImplBase.narrowCast(rawObjRef);
 			
 			// check if there is an object that belongs to the id
 			if(account == null) {
 				throw new InvalidParamException("TransactionImpl.getBalance(): ERROR, Account doesn't exist!");
 			} else {
 				
-				ret = account.getBalance();
+				return account.getBalance();
 				
 			}
 		}
-		
-		return ret;
 	}
 
 }

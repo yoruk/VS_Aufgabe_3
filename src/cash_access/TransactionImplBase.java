@@ -1,7 +1,8 @@
 package cash_access;
 
 import mware_lib.ObjectRef;
-import bank_access.ManagerImplStub;
+import cash_access.InvalidParamException;
+import cash_access.OverdraftException;
 
 public abstract class TransactionImplBase {
 

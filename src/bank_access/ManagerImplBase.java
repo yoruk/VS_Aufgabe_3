@@ -1,5 +1,6 @@
 package bank_access;
 
+import bank_access.InvalidParamException;
 import mware_lib.ObjectRef;
 
 public abstract class ManagerImplBase {
@@ -10,5 +11,4 @@ public abstract class ManagerImplBase {
 	  	ObjectRef objRef = (ObjectRef)rawObjectRef;
   		return new ManagerImplStub(objRef.getHost(), objRef.getPort(), objRef.getObjId(), true);
   }
-
 }

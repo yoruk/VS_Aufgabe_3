@@ -2,6 +2,7 @@ package tests;
 
 import bank_access.AccountImpl;
 import bank_access.AccountImplBase;
+import bank_access.OverdraftException;
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
 
@@ -18,5 +19,13 @@ public class ServerAccountTest {
 		System.out.println("ServerAccountTest: binding a AccountImpl object");
 		AccountImplBase konto = new AccountImpl();
 		nameSvc.rebind((Object)konto, "testkonto");
+		
+//		try {
+//			konto.transfer(10);
+//		} catch (OverdraftException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println("######### test:" + konto.getBalance());
 	}
 }

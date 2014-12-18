@@ -1,5 +1,6 @@
 package mware_lib;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,19 +14,21 @@ public class Connection {
     private class IncomingHandler implements Runnable {
     	private Socket socket = null;
     	private BlockingQueue<Message> incoming_queue = null;
+    	private ObjectInputStream in;
     	
-    	public IncomingHandler(Socket socket, BlockingQueue<Message> incoming_queue) {
+    	public IncomingHandler(Socket socket, BlockingQueue<Message> incoming_queue, ObjectInputStream in) {
     		this.socket = socket;
     		this.incoming_queue = incoming_queue;
+    		this.in = in;
     	}
     	
 		@Override
 		public void run() {
-			ObjectInputStream in;
+			//ObjectInputStream in;
 			
 			try {
-				//in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-				in = new ObjectInputStream(socket.getInputStream());
+				in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+				//in = new ObjectInputStream(socket.getInputStream());
 				
 				while(!Thread.interrupted()) {
 					//System.out.println((Message)in.readObject());
@@ -44,7 +47,8 @@ public class Connection {
 	
 	private Socket socket;
     private ObjectOutputStream out;
-    private BlockingQueue<Message> incoming_queue = new ArrayBlockingQueue<Message>(1);
+    private ObjectInputStream in;
+    private BlockingQueue<Message> incoming_queue = new ArrayBlockingQueue<Message>(1, true);
     private Thread thread_handler;
     
     public Connection(Socket socket) throws IOException {
@@ -53,7 +57,7 @@ public class Connection {
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
 
-        thread_handler = new Thread(new IncomingHandler(socket, incoming_queue));
+        thread_handler = new Thread(new IncomingHandler(socket, incoming_queue, in));
         thread_handler.start();
     }
 
@@ -80,6 +84,8 @@ public class Connection {
 
     public void close() throws IOException {
     	thread_handler.interrupt();
-        socket.close();
+    	//in.close();
+    	out.close();
+        //socket.close();
     }
 }

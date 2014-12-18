@@ -3,6 +3,7 @@ package bank_access;
 import java.io.IOException;
 import java.util.Map;
 
+import bank_access.InvalidParamException;
 import mware_lib.Connection;
 import mware_lib.Message;
 import mware_lib.NameService;

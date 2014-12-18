@@ -2,6 +2,7 @@ package bank_access;
 
 import java.util.Map;
 
+import bank_access.InvalidParamException;
 import mware_lib.NameService;
 import mware_lib.StringChecker;
 

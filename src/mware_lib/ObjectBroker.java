@@ -71,7 +71,7 @@ public class ObjectBroker {
 							} else {
 								
 								// object is a TransactionImplBase
-								new TransactionImplSkeleton(connection, msg, (TransactionImplBase)obj, object_cloud);
+								new TransactionImplSkeleton(connection, msg, (TransactionImplBase)obj, object_cloud, nameService);
 								
 							}
 											

@@ -7,6 +7,9 @@ import bank_access.ManagerImplBase;
 
 public class ClientManagerTest {
 	public static void main(String[] args) {
+		String owner = "123";
+		String branch = "456";
+		
 		System.out.println("ClientManagerTest is running");
 		
 		System.out.println("ClientManagerTest: creating ObjectBroker-Object");
@@ -21,9 +24,9 @@ public class ClientManagerTest {
 		System.out.println("ClientManagerTest: doing the narrow cast");
 		ManagerImplBase manager = ManagerImplBase.narrowCast(rawObjRef);
 		
-		System.out.println("ClientManagerTest: createAccount m s");
+		System.out.println("ServerManagerTest: creating account: " + owner + " " + branch);
 		try {
-			System.out.println("account id: " + manager.createAccount("m", "s"));
+			manager.createAccount(owner, branch);
 		} catch (InvalidParamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
