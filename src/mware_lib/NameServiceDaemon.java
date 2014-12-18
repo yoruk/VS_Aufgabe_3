@@ -32,8 +32,8 @@ public class NameServiceDaemon {
 			public void run() {
 				System.out.println("NameServiceDaemon.ReqHandler.run()");
 				
-				Message.MessageReason REBIND = Message.MessageReason.REBIND;
-				Message.MessageReason RESOLVE = Message.MessageReason.RESOLVE;
+				//Message.MessageReason REBIND = Message.MessageReason.REBIND;
+				//Message.MessageReason RESOLVE = Message.MessageReason.RESOLVE;
 				Message tmp_msg;
 				ObjectRef tmp_ObjectRef;
 				

@@ -47,6 +47,14 @@ public class NameServiceImpl extends NameService {
 			tmp_msg.setPayload(tmp_ObjRef);
 			connection.send(tmp_msg);
 			
+			// really ugly!!!
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			object_cloud.put(name, servant);			
 		} catch (IOException e) {
 			System.out.println("NameServiceImpl.rebind(): ERROR!");

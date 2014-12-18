@@ -148,6 +148,8 @@ public class TransactionImplStub extends TransactionImplBase {
 			msg.setReason(Message.MessageReason.METHOD_CALL);
 			msg.setObjName(objName);
 			msg.setMethod_name("getbalance");
+			Object[] methodParams = {accountID};
+			msg.setMethod_params(methodParams);
 			connection.send(msg);
 			
 			// receiving method return value

@@ -99,7 +99,11 @@ public class AccountImplStub extends AccountImplBase {
 					
 			// receiving method return value
 			msg = (Message)connection.receive();
-			res = (double)msg.getMethod_return();
+			if(msg.getReason() == Message.MessageReason.ERROR) {
+				res = 0;
+			} else {
+				res = (double)msg.getMethod_return();
+			}
 			
 		} catch (UnknownHostException e) {
 			if(debug) System.out.println("AccountImplStub.getBalance(): ERROR!");

@@ -54,6 +54,8 @@ public class ManagerImplStub extends ManagerImplBase {
 			msg = (Message)connection.receive();
 			if((msg.getReason() == Message.MessageReason.EXCEPTION) && (msg.getPayload() instanceof InvalidParamException)) {
 				throw (InvalidParamException)msg.getPayload();
+			} else if(msg.getReason() == Message.MessageReason.ERROR) {
+				ret = null;
 			} else {
 				ret = (String)msg.getMethod_return();
 			}

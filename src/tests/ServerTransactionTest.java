@@ -19,27 +19,13 @@ public class ServerTransactionTest {
 		System.out.println("ServerManagerTest: getting NameService reference");
 		NameService nameSvc = objBroker.getNameService();
 		
-//		System.out.println("ServerManagerTest: binding a AccountImpl object");
-//		AccountImplBase account = new AccountImpl();
-//		nameSvc.rebind((Object)account, "testaccount");
-		
-//		try {
-//			Thread.sleep(2000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		System.out.println("ServerManagerTest: binding a AccountImpl object");
+		AccountImplBase account = new AccountImpl();
+		nameSvc.rebind((Object)account, "testaccount");
 		
 		System.out.println("ServerManagerTest: binding a ManagerImpl object");
 		ManagerImplBase manager = new ManagerImpl();
 		nameSvc.rebind((Object)manager, "testmanager");
-		
-//		try {
-//			Thread.sleep(2000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 				
 		System.out.println("ServerManagerTest: binding a TransactionImpl object");
 		TransactionImplBase transaction = new TransactionImpl();

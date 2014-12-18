@@ -23,14 +23,6 @@ public class ServerManagerTest {
 		ManagerImplBase manager = new ManagerImpl();
 		nameSvc.rebind((Object)manager, "testmanager");
 		
-//		System.out.println("ServerManagerTest: creating account: " + owner + " " + branch);
-//		try {
-//			manager.createAccount(owner, branch);
-//		} catch (InvalidParamException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
 		System.out.println("ende");
 	}
 }

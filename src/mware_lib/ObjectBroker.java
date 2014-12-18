@@ -132,9 +132,12 @@ public class ObjectBroker {
 					clientSocket = serverSocket.accept();
 					thread_pool.execute(new ClientReq(clientSocket, object_cloud, nameService, debug));
 				}
+				
+				thread_pool.shutdown();
+				
 			} catch (IOException e) {
-				System.out.println("ObjectBroker.Reqhandler.run(): ERROR!");
-				e.printStackTrace();
+				//System.out.println("ObjectBroker.Reqhandler.run(): ERROR!");
+				//e.printStackTrace();
 			}
 			
 		}
@@ -207,8 +210,15 @@ public class ObjectBroker {
         /* Liefert den Namensdienst (Stellvertreterobjekt). */
     }
 
-    public void shutdown() {
+    public void shutDown() {
     	nameService = null;
+    	try {
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+    	reqHandler.interrupt();
     	
     	// TODO hier alle threads beenden und socket schliessen
         

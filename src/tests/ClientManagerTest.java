@@ -7,8 +7,8 @@ import bank_access.ManagerImplBase;
 
 public class ClientManagerTest {
 	public static void main(String[] args) {
-		String owner = "123";
-		String branch = "456";
+		String owner = "test";
+		String branch = "123";
 		
 		System.out.println("ClientManagerTest is running");
 		
