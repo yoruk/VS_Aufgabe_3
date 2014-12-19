@@ -7,23 +7,28 @@ import java.net.UnknownHostException;
 import bank_access.InvalidParamException;
 import mware_lib.Connection;
 import mware_lib.Message;
+import mware_lib.ObjectRef;
 
 public class ManagerImplStub extends ManagerImplBase {
 	private String serverAddress;
 	private int serverPort;
 	private String objName;
 	private boolean debug;
+	private String nameServiceAddress;
+	private int nameServicePort;
 	
-	public ManagerImplStub(String serverAddress, int serverPort, String objName, boolean debug) {
+	public ManagerImplStub(ObjectRef objRef, boolean debug) {
+		this.serverAddress = objRef.getHost();
+		this.serverPort = objRef.getPort();
+		this.objName= objRef.getObjId();
+		this.debug = debug;
+		this.nameServiceAddress = objRef.getNameServiceAddr();
+		this.nameServicePort = objRef.getNameServicePort();
+
 		if(debug) {
 			System.out.println("ManagerImplStub() server @: " + serverAddress + ":" + serverPort 
-								+ " objectname: " + objName);
+					+ " objectname: " + objName);
 		}
-		
-		this.serverAddress = serverAddress;
-		this.serverPort = serverPort;
-		this.objName= objName;
-		this.debug = debug;
 	}
 	
 	@Override

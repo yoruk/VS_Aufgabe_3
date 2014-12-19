@@ -9,6 +9,6 @@ public abstract class ManagerImplBase {
 
   public static ManagerImplBase narrowCast(Object rawObjectRef) {
 	  	ObjectRef objRef = (ObjectRef)rawObjectRef;
-  		return new ManagerImplStub(objRef.getHost(), objRef.getPort(), objRef.getObjId(), true);
+  		return new ManagerImplStub(objRef, true);
   }
 }

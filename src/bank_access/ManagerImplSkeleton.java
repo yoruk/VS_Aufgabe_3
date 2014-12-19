@@ -20,7 +20,7 @@ public class ManagerImplSkeleton {
 			Object[] params = msg.getMethod_params();
 			
 			try {
-				((ManagerImpl)obj).initManagerImpl(object_cloud, nameService);
+				//((ManagerImpl)obj).initManagerImpl(object_cloud, nameService);
 				ret = obj.createAccount((String)params[0], (String)params[1]);
 			} catch (InvalidParamException e) {
 				System.out.println("ManagerImpleSkeleton.createAccount(): ERROR!");

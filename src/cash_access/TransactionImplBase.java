@@ -14,7 +14,7 @@ public abstract class TransactionImplBase {
 
   public static TransactionImplBase narrowCast(Object rawObjectRef) {
 	  ObjectRef objRef = (ObjectRef)rawObjectRef;
-	  return new TransactionImplStub(objRef.getHost(), objRef.getPort(), objRef.getObjId(), true);
+	  return new TransactionImplStub(objRef, true);
   }
 
 }

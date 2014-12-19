@@ -20,7 +20,7 @@ public class TransactionImplSkeleton {
 		this.connection = connection;
 		Object[] params;
 		
-		((TransactionImpl)obj).initTransactionImpl(nameService);
+//		((TransactionImpl)obj).initTransactionImpl(nameService);
 		
 		switch(msg.getMethod_name()) {
 		case "deposit":

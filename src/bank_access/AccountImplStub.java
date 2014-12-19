@@ -7,24 +7,30 @@ import java.net.UnknownHostException;
 import bank_access.OverdraftException;
 import mware_lib.Connection;
 import mware_lib.Message;
+import mware_lib.ObjectRef;
 
 public class AccountImplStub extends AccountImplBase {
 	private String serverAddress;
 	private int serverPort;
 	private String objName;
 	private boolean debug;
+	private String nameServiceAddress;
+	private int nameServicePort;
 	
-	public AccountImplStub(String serverAddress, int serverPort, String objName, boolean debug) {
+	public AccountImplStub(ObjectRef objRef, boolean debug) {
+		this.serverAddress = objRef.getHost();
+		this.serverPort = objRef.getPort();
+		this.objName= objRef.getObjId();
+		this.debug = debug;
+		this.nameServiceAddress = objRef.getNameServiceAddr();
+		this.nameServicePort = objRef.getNameServicePort();
+
 		if(debug) {
 			System.out.println("AccountImplStub() server @: " + serverAddress + ":" + serverPort 
-								+ " objectname: " + objName);
+					+ " objectname: " + objName);
 		}
-		
-		this.serverAddress = serverAddress;
-		this.serverPort = serverPort;
-		this.objName= objName;
-		this.debug = debug;
 	}
+	
 	
 	@Override
 	public void transfer(double amount) throws OverdraftException {
@@ -43,10 +49,10 @@ public class AccountImplStub extends AccountImplBase {
 			// sending message call
 			msg = new Message();
 			msg.setReason(Message.MessageReason.METHOD_CALL);
+			msg.setObjName(objName);
 			msg.setMethod_name("transfer");
 			Object[] methodParams = {amount};
 			msg.setMethod_params(methodParams);
-			msg.setObjName(objName);
 			connection.send(msg);
 			
 			// receiving method return value

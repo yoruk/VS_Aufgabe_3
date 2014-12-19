@@ -7,6 +7,8 @@ public class ObjectRef implements Serializable {
 	private String host;
 	private int port;
 	private String objId;
+	private String nameServiceAddress;
+	private int nameServicePort;
 	
 	public ObjectRef(String host, int port, String objId) {
 		this.host = host;
@@ -33,5 +35,21 @@ public class ObjectRef implements Serializable {
 		sb.append(host + ":" + port + "-" + objId);
 		
 		return sb.toString();
+	}
+
+	public String getNameServiceAddr() {
+		return nameServiceAddress;
+	}
+
+	public void setNameServiceAddr(String nameServiceAddr) {
+		this.nameServiceAddress = nameServiceAddr;
+	}
+
+	public int getNameServicePort() {
+		return nameServicePort;
+	}
+
+	public void setNameServicePort(int nameServicePort) {
+		this.nameServicePort = nameServicePort;
 	}
 }

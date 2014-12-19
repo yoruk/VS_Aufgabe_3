@@ -11,7 +11,7 @@ public abstract class AccountImplBase {
 
     public static AccountImplBase narrowCast(Object rawObjectRef) {
     	ObjectRef objRef = (ObjectRef)rawObjectRef;
-    	return new AccountImplStub(objRef.getHost(), objRef.getPort(), objRef.getObjId(), true);
+    	return new AccountImplStub(objRef, true);
     }
 
 }

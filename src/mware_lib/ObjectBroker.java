@@ -50,13 +50,13 @@ public class ObjectBroker {
 					
 					// is it really a method call?
 					if(msg.getReason() == Message.MessageReason.METHOD_CALL) {
-						
+						System.out.println("1111111111111111111111111");
 						// for which object?
 						obj = object_cloud.get(msg.getObjName());
-						
+						System.out.println("2222222222222222222222222");
 						// is the object in the cloud?
 						if(obj != null) {
-							
+							System.out.println("3333333333333333333333333");
 							// object is of what type ?
 							if(obj instanceof AccountImplBase) {
 								
@@ -187,7 +187,7 @@ public class ObjectBroker {
 			e.printStackTrace();
 		}
     	
-    	System.out.println("ObjectBroker.init(): Reqhandler @ " + serverAddress + ":" + serverPort);
+    	//System.out.println("ObjectBroker.init(): Reqhandler @ " + serverAddress + ":" + serverPort);
     	
     	nameService = new NameServiceImpl(nameServiceAddress, nameServicePort, serverAddress,
     			serverPort, object_cloud, debugFlag);

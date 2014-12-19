@@ -26,6 +26,16 @@ public class NameServiceImpl extends NameService {
 		this.debug = debug;
 	}
 	
+	public NameServiceImpl(String nameServiceAddress, int nameServicePort, boolean debug) {
+		if(debug) {
+			System.out.println("NameServiceImpl(): NameService @ " + nameServiceAddress + ":" + nameServicePort);
+		}
+
+		this.nameServiceAddress = nameServiceAddress;
+		this.nameServicePort = nameServicePort;
+		this.debug = debug;
+	}
+	
 	@Override
 	public void rebind(Object servant, String name) {
 		if(debug) {
@@ -41,12 +51,15 @@ public class NameServiceImpl extends NameService {
 			socket = new Socket(nameServiceAddress, nameServicePort);
 			connection = new Connection(socket);
 			
+			object_cloud.put(name, servant);			
 			tmp_ObjRef = new ObjectRef(serverAddress, serverPort, name);
+			tmp_ObjRef.setNameServiceAddr(nameServiceAddress);
+			tmp_ObjRef.setNameServicePort(nameServicePort);
 			tmp_msg = new Message();
 			tmp_msg.setReason(Message.MessageReason.REBIND);
 			tmp_msg.setPayload(tmp_ObjRef);
 			connection.send(tmp_msg);
-			
+
 			// really ugly!!!
 			try {
 				Thread.sleep(50);
@@ -55,7 +68,6 @@ public class NameServiceImpl extends NameService {
 				e.printStackTrace();
 			}
 			
-			object_cloud.put(name, servant);			
 		} catch (IOException e) {
 			System.out.println("NameServiceImpl.rebind(): ERROR!");
 			e.printStackTrace();
