@@ -1,7 +1,11 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package tests;
 
-import cash_access.TransactionImpl;
-import cash_access.TransactionImplBase;
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
 import bank_access.AccountImpl;
@@ -26,9 +30,5 @@ public class ServerTransactionTest {
 		System.out.println("ServerManagerTest: binding a ManagerImpl object");
 		ManagerImplBase manager = new ManagerImpl();
 		nameSvc.rebind((Object)manager, "testmanager");
-				
-		System.out.println("ServerManagerTest: binding a TransactionImpl object");
-		TransactionImplBase transaction = new TransactionImpl();
-		nameSvc.rebind((Object)transaction, "testtransaction");
 	}
 }

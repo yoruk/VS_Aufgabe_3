@@ -1,0 +1,20 @@
+java -cp .:filiale.jar filiale.Filiale localhost 6666 testnk 123
+Bank resolved.
+Account null returned for null
+createAccount: exception OK 'bank-ipE41883'
+Account created 42111
+Magic key is 41631.0
+transfer O.K.
+Hoax ref test O.K.
+Hoax narrow test O.K.
+-> Press ENTER to exit application...
+
+
+Calling shutDown()...Done.
+Thread Reference Handler running=true class:java.lang.ref.Reference$ReferenceHandler
+Thread Thread-0 running=false class:java.lang.Thread
+Thread Signal Dispatcher running=true class:java.lang.Thread
+Thread main running=true class:java.lang.Thread
+Thread Finalizer running=true class:java.lang.ref.Finalizer$FinalizerThread
+Wait for termination...
+...FINISHED!

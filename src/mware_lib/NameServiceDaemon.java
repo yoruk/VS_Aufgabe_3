@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package mware_lib;
 
 import java.io.IOException;
@@ -14,23 +20,27 @@ public class NameServiceDaemon {
 /******************************* ReqHandler starts here *******************************/
 			private Connection connection = null;
 			private Map<String, ObjectRef> object_index = new HashMap<String, ObjectRef>();
+			private boolean debug = false;
 			
-			public ReqHandler(Socket client_socket, Map<String, ObjectRef> object_index) {
-				System.out.println("NameServiceDaemon.ReqHandler: answering incoming connection");
+			public ReqHandler(Socket client_socket, Map<String, ObjectRef> object_index, boolean debug) {
+				if(debug) System.out.println("NameServiceDaemon.ReqHandler: answering incoming connection");
 				
 				this.object_index = object_index;
+				this.debug = debug;
 				
 				try {
 					connection = new Connection(client_socket);
 				} catch(Exception e) {
-					System.out.println("NameServiceDaemon.ReqHandler: ERROR!");
-					e.printStackTrace();
+					if(debug) {
+						System.out.println("NameServiceDaemon.ReqHandler: ERROR!");
+						e.printStackTrace();						
+					}
 				}
 			}
 			
 			@Override
 			public void run() {
-				System.out.println("NameServiceDaemon.ReqHandler.run()");
+				if(debug) System.out.println("NameServiceDaemon.ReqHandler.run()");
 				
 				//Message.MessageReason REBIND = Message.MessageReason.REBIND;
 				//Message.MessageReason RESOLVE = Message.MessageReason.RESOLVE;
@@ -39,17 +49,17 @@ public class NameServiceDaemon {
 				
 				try {
 					tmp_msg = (Message)connection.receive();
-					System.out.println("NameServiceDaemon.ReqHandler.run(): message received:\n   " + tmp_msg);
+					if(debug) System.out.println("NameServiceDaemon.ReqHandler.run(): message received:\n   " + tmp_msg);
 					
 					switch(tmp_msg.getReason()) {
 						case REBIND:
-							System.out.println("NameServiceDaemon.ReqHandler.run(): REBIND");
+							if(debug) System.out.println("NameServiceDaemon.ReqHandler.run(): REBIND");
 							tmp_ObjectRef = (ObjectRef)tmp_msg.getPayload();
 							object_index.put(tmp_ObjectRef.getObjId(), tmp_ObjectRef);
 							break;
 							
 						case RESOLVE:
-							System.out.println("NameServiceDaemon.ReqHandler.run(): RESOLVE");
+							if(debug) System.out.println("NameServiceDaemon.ReqHandler.run(): RESOLVE");
 							tmp_ObjectRef = object_index.get(tmp_msg.getPayload());
 							tmp_msg.setReason(Message.MessageReason.RESOLVE_REPLY);
 							tmp_msg.setPayload((Object)tmp_ObjectRef);
@@ -57,15 +67,19 @@ public class NameServiceDaemon {
 							break;
 							
 						default:
-							System.out.println("NameServiceDaemon.ReqHandler.run(): ERROR, unknown message type received!");
+							if(debug) System.out.println("NameServiceDaemon.ReqHandler.run(): ERROR, unknown message type received!");
 					}
 					
 				} catch (ClassNotFoundException e) {
-					System.out.println("NameServiceDaemon.ReqHandler.run(): ERROR!");
-					e.printStackTrace();
+					if(debug) {
+						System.out.println("NameServiceDaemon.ReqHandler.run(): ERROR!");
+						e.printStackTrace();						
+					}
 				} catch (IOException e) {
-					System.out.println("NameServiceDaemon.ReqHandler.run(): ERROR!");
-					e.printStackTrace();
+					if(debug) {
+						System.out.println("NameServiceDaemon.ReqHandler.run(): ERROR!");
+						e.printStackTrace();						
+					}
 				}
 			}
 		}
@@ -78,14 +92,21 @@ public class NameServiceDaemon {
 		ExecutorService thread_pool = Executors.newFixedThreadPool(10);
 		ServerSocket server_socket = null;
 		int port = 6666;
+		boolean debug = false;
 		
 		if(args.length != 0) {
 			try {
 				port = Integer.parseInt(args[0]);
 			} catch (NumberFormatException e) {
-				System.out.println("NameServiceDaemon.main(): ERROR, the given port isn't from type int!, using default:" + port);
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("NameServiceDaemon.main(): ERROR, the given port isn't from type int!, using default:" + port);
+					e.printStackTrace();					
+				}
 			}
+		}
+		
+		if((args.length >= 2) && (args[1].equals("-v"))) {
+			debug = true;
 		}
 		
 		try {
@@ -93,19 +114,23 @@ public class NameServiceDaemon {
 			
 			while(true) {
 				Socket client_socket = server_socket.accept();
-				thread_pool.execute(new ReqHandler(client_socket, object_index));
+				thread_pool.execute(new ReqHandler(client_socket, object_index, debug));
 			}
 			
 		} catch (IOException e) {
-			System.out.println("NameServiceDaemon.main(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("NameServiceDaemon.main(): ERROR!");
+				e.printStackTrace();				
+			}
 		} finally {
 			try {
-				System.out.println("NameServiceDaemon.main(): closing server socket");
+				if(debug) System.out.println("NameServiceDaemon.main(): closing server socket");
 				server_socket.close();
 			} catch (IOException e) {
-				System.out.println("NameServiceDaemon.main(): ERROR!");
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("NameServiceDaemon.main(): ERROR!");
+					e.printStackTrace();					
+				}
 			}
 		}	
 	}

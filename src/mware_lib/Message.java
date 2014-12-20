@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package mware_lib;
 
 import java.io.Serializable;
@@ -7,7 +13,7 @@ public class Message implements Serializable {
 		UNDEFINED, REBIND, RESOLVE, RESOLVE_REPLY, METHOD_CALL, METHOD_RETURN, EXCEPTION, ERROR
 	}
 	
-	private static final long serialVersionUID = 10L;
+	private static final long serialVersionUID = 602204478688641098L;
 	private static int message_id_counter = 0;
 	private int message_id;
 	private MessageReason reason;

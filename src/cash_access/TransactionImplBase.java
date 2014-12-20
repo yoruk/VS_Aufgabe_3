@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package cash_access;
 
 import mware_lib.ObjectRef;
@@ -14,7 +20,7 @@ public abstract class TransactionImplBase {
 
   public static TransactionImplBase narrowCast(Object rawObjectRef) {
 	  ObjectRef objRef = (ObjectRef)rawObjectRef;
-	  return new TransactionImplStub(objRef, true);
+	  return new TransactionImplStub(objRef, false);
   }
 
 }

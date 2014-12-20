@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package bank_access;
 
 import java.io.IOException;
@@ -13,17 +19,17 @@ public class ManagerImplStub extends ManagerImplBase {
 	private String serverAddress;
 	private int serverPort;
 	private String objName;
-	private boolean debug;
-	private String nameServiceAddress;
-	private int nameServicePort;
+	private boolean debug = false;
 	
 	public ManagerImplStub(ObjectRef objRef, boolean debug) {
+		if(debug) {
+			System.out.println("+++++++++ ManagerImplStub");
+		}
+		
 		this.serverAddress = objRef.getHost();
 		this.serverPort = objRef.getPort();
 		this.objName= objRef.getObjId();
 		this.debug = debug;
-		this.nameServiceAddress = objRef.getNameServiceAddr();
-		this.nameServicePort = objRef.getNameServicePort();
 
 		if(debug) {
 			System.out.println("ManagerImplStub() server @: " + serverAddress + ":" + serverPort 
@@ -34,7 +40,7 @@ public class ManagerImplStub extends ManagerImplBase {
 	@Override
 	public String createAccount(String owner, String branch) throws InvalidParamException {
 		if(debug) {
-			System.out.println("ManagerImplStub.transfer(): objectname: " + objName + " owner: " + owner + " branch: " + branch);
+			System.out.println("ManagerImplStub.createAccount(): objectname: " + objName + " owner: " + owner + " branch: " + branch);
 		}
 		
 		Socket socket = null;
@@ -58,7 +64,8 @@ public class ManagerImplStub extends ManagerImplBase {
 			// receiving method return value
 			msg = (Message)connection.receive();
 			if((msg.getReason() == Message.MessageReason.EXCEPTION) && (msg.getPayload() instanceof InvalidParamException)) {
-				throw (InvalidParamException)msg.getPayload();
+				//throw (InvalidParamException)msg.getPayload();
+				throw new InvalidParamException(((InvalidParamException)msg.getPayload()).getMessage());
 			} else if(msg.getReason() == Message.MessageReason.ERROR) {
 				ret = null;
 			} else {
@@ -66,20 +73,28 @@ public class ManagerImplStub extends ManagerImplBase {
 			}
 			
 		} catch (UnknownHostException e) {
-			if(debug) System.out.println("ManagerImplStub.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("ManagerImplStub.transfer(): ERROR!");
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
-			if(debug) System.out.println("ManagerImplStub.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("ManagerImplStub.transfer(): ERROR!");
+				e.printStackTrace();
+			}
 		} catch (ClassNotFoundException e) {
-			if(debug) System.out.println("ManagerImplStub.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("ManagerImplStub.transfer(): ERROR!");
+				e.printStackTrace();
+			}
 		} finally {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				if(debug) System.out.println("ManagerImplStub.transfer(): ERROR!");
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("ManagerImplStub.transfer(): ERROR!");
+					e.printStackTrace();
+				}
 			}
 		}
 		

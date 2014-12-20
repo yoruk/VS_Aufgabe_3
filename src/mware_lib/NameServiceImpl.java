@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package mware_lib;
 
 import java.io.IOException;
@@ -9,7 +15,7 @@ public class NameServiceImpl extends NameService {
 	private int nameServicePort;
 	private String serverAddress;
 	private int serverPort;
-	private boolean debug;
+	private boolean debug = false;
 	private Map<String, Object> object_cloud;
 	
 	public NameServiceImpl(String nameServiceAddress, int nameServicePort, String serverAddress,
@@ -69,14 +75,18 @@ public class NameServiceImpl extends NameService {
 			}
 			
 		} catch (IOException e) {
-			System.out.println("NameServiceImpl.rebind(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("NameServiceImpl.rebind(): ERROR!");
+				e.printStackTrace();				
+			}
 		} finally {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				System.out.println("NameServiceImpl.rebind(): ERROR!");
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("NameServiceImpl.rebind(): ERROR!");
+					e.printStackTrace();					
+				}
 			}
 		}
 	}
@@ -105,17 +115,23 @@ public class NameServiceImpl extends NameService {
 			if(debug) System.out.println("### Sending receiving message: " + tmp_msg);
 			
 		} catch (IOException e) {
-			System.out.println("NameServiceImpl.resolve(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("NameServiceImpl.resolve(): ERROR!");
+				e.printStackTrace();				
+			}
 		} catch (ClassNotFoundException e) {
-			System.out.println("NameServiceImpl.resolve(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("NameServiceImpl.resolve(): ERROR!");
+				e.printStackTrace();				
+			}
 		} finally {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				System.out.println("NameServiceImpl.resolve(): ERROR!");
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("NameServiceImpl.resolve(): ERROR!");
+					e.printStackTrace();					
+				}
 			}
 		}
 		

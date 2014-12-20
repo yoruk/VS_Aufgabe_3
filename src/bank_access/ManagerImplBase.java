@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package bank_access;
 
 import bank_access.InvalidParamException;
@@ -9,6 +15,6 @@ public abstract class ManagerImplBase {
 
   public static ManagerImplBase narrowCast(Object rawObjectRef) {
 	  	ObjectRef objRef = (ObjectRef)rawObjectRef;
-  		return new ManagerImplStub(objRef, true);
+  		return new ManagerImplStub(objRef, false);
   }
 }

@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package mware_lib;
 
 import java.io.IOException;
@@ -10,8 +16,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import cash_access.TransactionImplBase;
-import cash_access.TransactionImplSkeleton;
 import bank_access.AccountImplBase;
 import bank_access.AccountImplSkeleton;
 import bank_access.ManagerImplBase;
@@ -50,29 +54,31 @@ public class ObjectBroker {
 					
 					// is it really a method call?
 					if(msg.getReason() == Message.MessageReason.METHOD_CALL) {
-						System.out.println("1111111111111111111111111");
+						
+						if(debug) {
+							System.out.println("### object_cloud:");
+							for (Map.Entry<String, Object> entry : object_cloud.entrySet()) {
+								System.out.println(entry.getKey()+" : "+entry.getValue());
+							}
+						}
+						
 						// for which object?
 						obj = object_cloud.get(msg.getObjName());
-						System.out.println("2222222222222222222222222");
+						
 						// is the object in the cloud?
 						if(obj != null) {
-							System.out.println("3333333333333333333333333");
+							
 							// object is of what type ?
 							if(obj instanceof AccountImplBase) {
 								
 								// object is a AccountImplBase
-								new AccountImplSkeleton(connection, msg, (AccountImplBase)obj);
+								new AccountImplSkeleton(connection, msg, (AccountImplBase)obj, debug);
 							
 							} else if(obj instanceof ManagerImplBase) {
 						
 								// object is a ManagerImplBase
-								new ManagerImplSkeleton(connection, msg, (ManagerImplBase)obj, object_cloud, nameService);
+								new ManagerImplSkeleton(connection, msg, (ManagerImplBase)obj, object_cloud, nameService, debug);
 							
-							} else {
-								
-								// object is a TransactionImplBase
-								new TransactionImplSkeleton(connection, msg, (TransactionImplBase)obj, object_cloud, nameService);
-								
 							}
 											
 						// object is not in the cloud
@@ -91,16 +97,16 @@ public class ObjectBroker {
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if(debug) e.printStackTrace();
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if(debug) e.printStackTrace();
 				} finally {
 					try {
 						socket.close();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						if(debug) e.printStackTrace();
 					}
 				}
 			}
@@ -109,7 +115,7 @@ public class ObjectBroker {
 		private ServerSocket serverSocket;
 		private Map<String, Object> object_cloud;
 		private NameService nameService;
-		private boolean debug;
+		private boolean debug = false;
 		
 		public ReqHandler(ServerSocket serverSocket, Map<String, Object> object_cloud, NameService nameService, boolean debug) {
 			this.serverSocket = serverSocket;
@@ -153,7 +159,7 @@ public class ObjectBroker {
     private static int serverPort;
     private static ServerSocket serverSocket;
     private static Thread reqHandler;
-    private static boolean debugFlag;
+    private static boolean debugFlag = false;
 
     public static ObjectBroker init(String serviceHost, int listenPort, boolean debug) {
     	if(debug) {
@@ -184,10 +190,10 @@ public class ObjectBroker {
 			serverAddress = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(debug) e.printStackTrace();
 		}
     	
-    	//System.out.println("ObjectBroker.init(): Reqhandler @ " + serverAddress + ":" + serverPort);
+    	System.out.println("ObjectBroker.init(): Reqhandler @ " + serverAddress + ":" + serverPort);
     	
     	nameService = new NameServiceImpl(nameServiceAddress, nameServicePort, serverAddress,
     			serverPort, object_cloud, debugFlag);

@@ -1,0 +1,22 @@
+java -cp .:bank.jar bank.Bank 127.0.0.1 6666 testbank
+ObjectBroker.init(): Reqhandler @ 127.0.0.1:6667
+Rebind NDEA...Done.
+-> Press ENTER to exit application...
+Calling shutDown()...Done.
+Thread pool-1-thread-3 running=true class:java.lang.Thread
+Thread pool-1-thread-6 running=true class:java.lang.Thread
+Thread main running=true class:java.lang.Thread
+Thread pool-1-thread-4 running=true class:java.lang.Thread
+Thread pool-1-thread-8 running=true class:java.lang.Thread
+Thread pool-1-thread-5 running=true class:java.lang.Thread
+Thread pool-1-thread-10 running=true class:java.lang.Thread
+Thread pool-1-thread-1 running=true class:java.lang.Thread
+Thread pool-1-thread-9 running=true class:java.lang.Thread
+Thread Reference Handler running=true class:java.lang.ref.Reference$ReferenceHandler
+Thread Finalizer running=true class:java.lang.ref.Finalizer$FinalizerThread
+Thread Signal Dispatcher running=true class:java.lang.Thread
+Thread pool-1-thread-7 running=true class:java.lang.Thread
+Thread pool-1-thread-2 running=true class:java.lang.Thread
+Wait for termination...
+...FINISHED!
+

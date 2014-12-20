@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package bank_access;
 
 import java.io.IOException;
@@ -9,10 +15,12 @@ import mware_lib.Message;
 public class AccountImplSkeleton {	
 	AccountImplBase obj = null;
 	Connection connection = null;
+	boolean debug = false;
 	
-	public AccountImplSkeleton(Connection connection, Message msg, AccountImplBase obj) {		
+	public AccountImplSkeleton(Connection connection, Message msg, AccountImplBase obj, boolean debug) {		
 		this.obj = obj;
 		this.connection = connection;
+		this.debug = debug;
 		
 		switch(msg.getMethod_name()) {
 		case "transfer":
@@ -29,8 +37,7 @@ public class AccountImplSkeleton {
 				msg.setReason(Message.MessageReason.ERROR);
 				connection.send(msg);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(debug) e.printStackTrace();
 			}
 		}
 	}
@@ -43,16 +50,20 @@ public class AccountImplSkeleton {
 			obj.transfer(amount);
 		
 		} catch (OverdraftException e) {
-			System.out.println("AccountImpleSkeleton.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImpleSkeleton.transfer(): ERROR!");
+				e.printStackTrace();				
+			}
 
 			msg.setReason(Message.MessageReason.EXCEPTION);
-			msg.setPayload(e);
+			msg.setPayload((Exception)e);
 			try {
 				connection.send(msg);
 			} catch (IOException e1) {
-				System.out.println("AccountImpleSkeleton.transfer(): ERROR!");
-				e1.printStackTrace();
+				if(debug) {
+					System.out.println("AccountImpleSkeleton.transfer(): ERROR!");
+					e1.printStackTrace();					
+				}
 			}
 			
 			return;
@@ -62,8 +73,10 @@ public class AccountImplSkeleton {
 		try {
 			connection.send(msg);
 		} catch (IOException e) {
-			System.out.println("AccountImpleSkeleton.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImpleSkeleton.transfer(): ERROR!");
+				e.printStackTrace();								
+			}
 		}
 	}
 
@@ -75,8 +88,10 @@ public class AccountImplSkeleton {
 		try {
 			connection.send(msg);
 		} catch (IOException e) {
-			System.out.println("AccountImpleSkeleton.getBalance(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImpleSkeleton.getBalance(): ERROR!");
+				e.printStackTrace();				
+			}
 		}
 	}
 

@@ -1,0 +1,26 @@
+java -cp .:geldautomat.jar geldautomat.Geldautomat 127.0.1 6666 testbank-123 
+Account resolved.
+depo...
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+--bal 41631.0
+...depo
+bal:41631.0
+check dep-np-1 ok
+*** check dep-np-2 FAILED
+check dep-np-3 ok
+check dep-val-1 ok
+*** check dep-val-2 FAILED
+check wit-np-1 ok
+*** check wit-np-2 FAILED
+check wit-np-3 ok
+check wit-val-1 ok
+*** check wit-val-2 FAILED
+

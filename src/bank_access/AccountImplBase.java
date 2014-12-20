@@ -1,3 +1,9 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package bank_access;
 
 import bank_access.OverdraftException;
@@ -11,7 +17,7 @@ public abstract class AccountImplBase {
 
     public static AccountImplBase narrowCast(Object rawObjectRef) {
     	ObjectRef objRef = (ObjectRef)rawObjectRef;
-    	return new AccountImplStub(objRef, true);
+    	return new AccountImplStub(objRef, false);
     }
 
 }

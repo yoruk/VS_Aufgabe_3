@@ -1,9 +1,15 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package mware_lib;
 
 import java.io.Serializable;
 
 public class ObjectRef implements Serializable {
-	private static final long serialVersionUID = 20L;
+	private static final long serialVersionUID = 4101177988521340144L;
 	private String host;
 	private int port;
 	private String objId;

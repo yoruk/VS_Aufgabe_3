@@ -1,9 +1,16 @@
+/*
+ * 	Verteilte Systeme Praktikum, Wintersemester 2014/15
+ * 
+ *  Eugen Winter, Michael Schmidt
+ */
+
 package bank_access;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import cash_access.InvalidParamException;
 import bank_access.OverdraftException;
 import mware_lib.Connection;
 import mware_lib.Message;
@@ -13,17 +20,13 @@ public class AccountImplStub extends AccountImplBase {
 	private String serverAddress;
 	private int serverPort;
 	private String objName;
-	private boolean debug;
-	private String nameServiceAddress;
-	private int nameServicePort;
+	private boolean debug = false;
 	
-	public AccountImplStub(ObjectRef objRef, boolean debug) {
+	public AccountImplStub(ObjectRef objRef, boolean debug) {		
 		this.serverAddress = objRef.getHost();
 		this.serverPort = objRef.getPort();
 		this.objName= objRef.getObjId();
 		this.debug = debug;
-		this.nameServiceAddress = objRef.getNameServiceAddr();
-		this.nameServicePort = objRef.getNameServicePort();
 
 		if(debug) {
 			System.out.println("AccountImplStub() server @: " + serverAddress + ":" + serverPort 
@@ -58,24 +61,33 @@ public class AccountImplStub extends AccountImplBase {
 			// receiving method return value
 			msg = (Message)connection.receive();
 			if((msg.getReason() == Message.MessageReason.EXCEPTION) && (msg.getPayload() instanceof OverdraftException)) {
-				throw (OverdraftException)msg.getPayload();
+				//throw (OverdraftException)msg.getPayload();
+				throw new OverdraftException(((OverdraftException)msg.getPayload()).getMessage());
 			}
 			
 		} catch (UnknownHostException e) {
-			if(debug) System.out.println("AccountImplStub.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImplStub.transfer(): ERROR!");
+				e.printStackTrace();				
+			}
 		} catch (IOException e) {
-			if(debug) System.out.println("AccountImplStub.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImplStub.transfer(): ERROR!");
+				e.printStackTrace();				
+			}
 		} catch (ClassNotFoundException e) {
-			if(debug) System.out.println("AccountImplStub.transfer(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImplStub.transfer(): ERROR!");
+				e.printStackTrace();				
+			}
 		} finally {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				if(debug) System.out.println("AccountImplStub.transfer(): ERROR!");
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("AccountImplStub.transfer(): ERROR!");
+					e.printStackTrace();					
+				}
 			}
 		}
 	}
@@ -112,20 +124,28 @@ public class AccountImplStub extends AccountImplBase {
 			}
 			
 		} catch (UnknownHostException e) {
-			if(debug) System.out.println("AccountImplStub.getBalance(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImplStub.getBalance(): ERROR!");
+				e.printStackTrace();				
+			}
 		} catch (IOException e) {
-			if(debug) System.out.println("AccountImplStub.getBalance(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImplStub.getBalance(): ERROR!");
+				e.printStackTrace();				
+			}
 		} catch (ClassNotFoundException e) {
-			if(debug) System.out.println("AccountImplStub.getBalance(): ERROR!");
-			e.printStackTrace();
+			if(debug) {
+				System.out.println("AccountImplStub.getBalance(): ERROR!");
+				e.printStackTrace();				
+			}
 		} finally {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				if(debug) System.out.println("AccountImplStub.getBalance(): ERROR!");
-				e.printStackTrace();
+				if(debug) {
+					System.out.println("AccountImplStub.getBalance(): ERROR!");
+					e.printStackTrace();					
+				}
 			}
 		}
 		
