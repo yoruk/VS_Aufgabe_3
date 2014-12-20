@@ -45,6 +45,9 @@ public class TransactionImplStub extends TransactionImplBase {
 
 	@Override
 	public void deposit(String accountID, double amount) throws InvalidParamException {
+		String tmp_accountID = (accountID == null) ? "null_pointer" : accountID;
+		System.out.println("### DEBUG: transaction.deposit(): accountID=" + tmp_accountID + " amount=" + amount);
+		
 		if(debug) {
 			System.out.println("TransactionImplStub.transfer(): objectname: " + objName + " amount: " + amount);
 		}
@@ -107,6 +110,9 @@ public class TransactionImplStub extends TransactionImplBase {
 
 	@Override
 	public void withdraw(String accountID, double amount) throws InvalidParamException, OverdraftException {
+		String tmp_accountID = (accountID == null) ? "null_pointer" : accountID;
+		System.out.println("### DEBUG: transaction.deposit(): accountID=" + tmp_accountID + " amount=" + amount);
+		
 		if(debug) {
 			System.out.println("TransactionImplStub.withdraw(): objectname: " + objName + " amount: " + amount);
 		}
@@ -175,6 +181,9 @@ public class TransactionImplStub extends TransactionImplBase {
 
 	@Override
 	public double getBalance(String accountID) throws InvalidParamException {
+		String tmp_accountID = (accountID == null) ? "null_pointer" : accountID;
+		System.out.println("### DEBUG: transaction.getBalance(): accountID=" + tmp_accountID);
+		
 		if(debug) {
 			System.out.println("TransactionImplStub.getBalance(): objectname: " + objName);
 		}

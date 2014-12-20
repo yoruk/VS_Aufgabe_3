@@ -37,6 +37,8 @@ public class AccountImplStub extends AccountImplBase {
 	
 	@Override
 	public void transfer(double amount) throws OverdraftException {
+		System.out.println("### DEBUG: account.transfer(): amount=" + amount);
+		
 		if(debug) {
 			System.out.println("AccountImplStub.transfer(): objectname: " + objName + " amount: " + amount);
 		}

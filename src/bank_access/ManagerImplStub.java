@@ -39,6 +39,10 @@ public class ManagerImplStub extends ManagerImplBase {
 	
 	@Override
 	public String createAccount(String owner, String branch) throws InvalidParamException {
+		String tmp_owner = (owner == null) ? "null_pointer" : owner;
+		String tmp_branch = (branch == null) ? "null_pointer" : branch;
+		System.out.println("### DEBUG: manager.createAccount(): owner=" + tmp_owner + " branch=" + tmp_branch);
+		
 		if(debug) {
 			System.out.println("ManagerImplStub.createAccount(): objectname: " + objName + " owner: " + owner + " branch: " + branch);
 		}
