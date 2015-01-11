@@ -28,10 +28,10 @@ public class AccountImplStub extends AccountImplBase {
 		this.objName= objRef.getObjId();
 		this.debug = debug;
 
-		if(debug) {
+		//if(debug) {
 			System.out.println("AccountImplStub() server @: " + serverAddress + ":" + serverPort 
 					+ " objectname: " + objName);
-		}
+		//}
 	}
 	
 	

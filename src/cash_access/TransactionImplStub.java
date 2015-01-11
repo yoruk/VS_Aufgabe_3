@@ -26,10 +26,6 @@ public class TransactionImplStub extends TransactionImplBase {
 	private int nameServicePort;
 	
 	public TransactionImplStub(ObjectRef objRef, boolean debug) {
-		if(debug) {
-			System.out.println("+++++++++ TransactionImplStub");
-		}
-		
 		this.serverAddress = objRef.getHost();
 		this.serverPort = objRef.getPort();
 		this.objName= objRef.getObjId();
@@ -37,10 +33,10 @@ public class TransactionImplStub extends TransactionImplBase {
 		this.nameServiceAddress = objRef.getNameServiceAddr();
 		this.nameServicePort = objRef.getNameServicePort();
 		
-		if(debug) {
+		//if(debug) {
 			System.out.println("TransactionImplStub() server @: " + serverAddress + ":" + serverPort 
 					+ " objectname: " + objName);
-		}
+		//}
 	}
 
 	@Override

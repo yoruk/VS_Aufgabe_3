@@ -22,19 +22,15 @@ public class ManagerImplStub extends ManagerImplBase {
 	private boolean debug = false;
 	
 	public ManagerImplStub(ObjectRef objRef, boolean debug) {
-		if(debug) {
-			System.out.println("+++++++++ ManagerImplStub");
-		}
-		
 		this.serverAddress = objRef.getHost();
 		this.serverPort = objRef.getPort();
 		this.objName= objRef.getObjId();
 		this.debug = debug;
 
-		if(debug) {
+		//if(debug) {
 			System.out.println("ManagerImplStub() server @: " + serverAddress + ":" + serverPort 
 					+ " objectname: " + objName);
-		}
+		//}
 	}
 	
 	@Override
